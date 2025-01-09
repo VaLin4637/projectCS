@@ -1,0 +1,564 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Gallery',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellowAccent),
+        useMaterial3: true,
+      ),
+      home: const HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+} //สร้างหน้าจอที่สามารถเปลี่ยนสถานะได้
+
+class CategoryScreen extends StatelessWidget {
+  final String title;
+  final List<String> images;
+  final ScrollController _scrollController = ScrollController();
+
+  CategoryScreen({
+    super.key,
+    required this.title,
+    required this.images,
+  });
+
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0, // ตำแหน่งเริ่มต้น (ด้านบนสุด)
+      duration: const Duration(seconds: 1), // ระยะเวลาที่ใช้ในการเลื่อน
+      curve: Curves.easeInOut, // รูปแบบการเลื่อน
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: Colors.blueGrey,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _scrollToTop, // เรียกฟังก์ชันเลื่อนกลับด้านบน
+        backgroundColor: const Color.fromARGB(255, 157, 177, 158),
+        child: const Icon(Icons.arrow_upward), // ไอคอนลูกศรขึ้น
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20), // มุมมน
+        ),
+      ),
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Column(
+          children: [
+            GridView.builder(
+              shrinkWrap: true, // ใช้ GridView ภายใน SingleChildScrollView
+              physics:
+                  NeverScrollableScrollPhysics(), // ปิดการเลื่อนของ GridView
+              padding: const EdgeInsets.all(10),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: images.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(images[index]),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TextInputScreen extends StatefulWidget {
+  const TextInputScreen({super.key});
+
+  @override
+  State<TextInputScreen> createState() => _TextInputScreenState();
+}
+
+class _TextInputScreenState extends State<TextInputScreen> {
+  final TextEditingController _controller = TextEditingController();
+  String _output = ''; // ตัวแปรสำหรับเก็บผลลัพธ์ที่จะแสดง
+
+  void _showInput() {
+    setState(() {
+      _output = _controller.text; // เก็บข้อความที่ผู้ใช้กรอก
+    });
+  }
+
+  void _navigateToCategory() {
+    final Map<String, List<String>> categories = {
+      'All': [
+        'asset/images/netural/2d2fc4b0-8396-48dd-86d5-554bd48f0072.jpg',
+        'asset/images/netural/8a1c0825-ba83-4e0d-a122-ff1c07da1677.jpg',
+        'asset/images/netural/53f3f3f1-e837-4439-b0e7-064d64195ad9.jpg',
+        'asset/images/green/@ne_hwa.jpg',
+        'asset/images/green/777.jpg',
+        'asset/images/earth/6b99b8a8-a09e-4d56-89f3-e04cea400b72.jpg',
+        'asset/images/earth/6fc4ef97-6aae-41ab-9977-3a3b1cf7d080.jpg',
+        'asset/images/earth/39a37fd1-f9c3-4024-bd2c-c6be1d3b534b.jpg',
+        'asset/images/gold/🩶.jpg',
+        'asset/images/gold/1.jpg',
+        'asset/images/gold/2.jpg',
+        'asset/images/gold/2 (2).jpg',
+        'asset/images/gold/16b7935f-6a34-4da9-8e93-2a19d939f60a.jpg',
+        'asset/images/gold/36739ad7-af68-4916-911f-217d25300e57.jpg',
+        'asset/images/gold/b092df27-4655-40da-a7c2-08d770d26730.jpg',
+        'asset/images/gold/bab464bb-f35b-49f2-acb3-23bffbb8bc2c.jpg',
+        'asset/images/earth/740218a4-18f5-4778-a464-58b030b732e3.jpg',
+        'asset/images/earth/Art 🎨.jpg',
+        'asset/images/earth/cb3f0c7e-f010-4d36-8bd4-9cf52bb0b9d0.jpg',
+        'asset/images/green/download.jpg',
+        'asset/images/green/jen brown _ antes de diciembre.jpg',
+        'asset/images/netural/0319f9a8-aba6-42f5-9da2-13b4a7bf380f.jpg',
+        'asset/images/netural/3649dcff-5bd5-4e4f-8b0a-f440ebb5d095.jpg',
+        'asset/images/netural/b6b93a79-b4cd-46dc-90a2-5e03690281d4.jpg',
+
+        // (ใส่ภาพอื่นๆ ตามหมวดหมู่)
+      ],
+      'Classic': [
+        'asset/images/gold/🩶.jpg',
+        'asset/images/gold/1.jpg',
+        'asset/images/gold/2.jpg',
+        'asset/images/gold/2 (2).jpg',
+        'asset/images/gold/16b7935f-6a34-4da9-8e93-2a19d939f60a.jpg',
+        'asset/images/gold/36739ad7-af68-4916-911f-217d25300e57.jpg',
+        'asset/images/gold/b092df27-4655-40da-a7c2-08d770d26730.jpg',
+        'asset/images/gold/bab464bb-f35b-49f2-acb3-23bffbb8bc2c.jpg',
+
+        // (ใส่ภาพอื่นๆ ตามหมวดหมู่)
+      ],
+      'Chill': [
+        'asset/images/earth/6b99b8a8-a09e-4d56-89f3-e04cea400b72.jpg',
+        'asset/images/earth/6fc4ef97-6aae-41ab-9977-3a3b1cf7d080.jpg',
+        'asset/images/earth/39a37fd1-f9c3-4024-bd2c-c6be1d3b534b.jpg',
+        'asset/images/earth/740218a4-18f5-4778-a464-58b030b732e3.jpg',
+        'asset/images/earth/Art 🎨.jpg',
+        'asset/images/earth/cb3f0c7e-f010-4d36-8bd4-9cf52bb0b9d0.jpg',
+        // (ใส่ภาพอื่นๆ ตามหมวดหมู่)
+      ],
+      'Relax': [
+        'asset/images/green/@ne_hwa.jpg',
+        'asset/images/green/777.jpg',
+        'asset/images/green/download.jpg',
+        'asset/images/green/jen brown _ antes de diciembre.jpg',
+
+        // (ใส่ภาพอื่นๆ ตามหมวดหมู่)
+      ],
+      'Rest': [
+        'asset/images/netural/2d2fc4b0-8396-48dd-86d5-554bd48f0072.jpg',
+        'asset/images/netural/8a1c0825-ba83-4e0d-a122-ff1c07da1677.jpg',
+        'asset/images/netural/53f3f3f1-e837-4439-b0e7-064d64195ad9.jpg',
+        'asset/images/netural/0319f9a8-aba6-42f5-9da2-13b4a7bf380f.jpg',
+        'asset/images/netural/3649dcff-5bd5-4e4f-8b0a-f440ebb5d095.jpg',
+        'asset/images/netural/b6b93a79-b4cd-46dc-90a2-5e03690281d4.jpg',
+        // (ใส่ภาพอื่นๆ ตามหมวดหมู่)
+      ],
+    };
+
+    if (categories.containsKey(_output)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CategoryScreen(
+            title: _output,
+            images: categories[_output]!,
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Category "${_output}" not found.'),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Search'),
+        backgroundColor: const Color.fromARGB(255, 255, 243, 218),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // TextField สำหรับรับข้อมูลจากผู้ใช้
+            TextField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                labelText:
+                    'Enter Something', // เพิ่มเครื่องหมายคำพูดรอบข้อความ
+                labelStyle: TextStyle(
+                    fontStyle: FontStyle.italic), // ทำให้ข้อความเป็นตัวเอียง
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 20),
+            // ปุ่มสำหรับแสดงข้อความที่กรอกใน TextField
+            ElevatedButton(
+              onPressed: () {
+                _showInput(); // แสดงข้อความที่กรอก
+                _navigateToCategory(); // นำทางไปยังหน้าหมวดหมู่
+              },
+              child: const Text('Search'),
+            ),
+            const SizedBox(height: 20),
+            // แสดงผลลัพธ์ที่ได้จาก TextField
+            Text(
+              '$_output',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<String> _images = [
+    '/asset/images/gold/☕️.jpg',
+    '/asset/images/green/1.jpg',
+    '/asset/images/netural/2.jpg',
+    '/asset/images/green/2.jpg',
+    '/asset/images/netural/1.jpg',
+    '/asset/images/earth/1.jpg',
+  ];
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _startSlideshow();
+  }
+
+  void _startSlideshow() {
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted) {
+        setState(() {
+          _currentIndex = (_currentIndex + 1) % _images.length;
+        });
+        _startSlideshow();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Gallery Home',
+            style: GoogleFonts.dosis(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.normal,
+              color: Colors.grey[800],
+            )),
+        backgroundColor: const Color.fromARGB(255, 255, 243, 218),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, color: Colors.grey, size: 30),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const TextInputScreen()),
+              );
+            },
+          )
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Container(
+              width: 450,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20), // กำหนดความโค้งของขอบ
+                image: DecorationImage(
+                  image: NetworkImage(_images[_currentIndex]),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          //Padding(padding: const EdgeInsets.all(16.0)),
+          Expanded(
+            flex: 3,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CategoryScreen(
+                          title: 'All',
+                          images: [
+                            'asset/images/netural/2d2fc4b0-8396-48dd-86d5-554bd48f0072.jpg',
+                            'asset/images/netural/8a1c0825-ba83-4e0d-a122-ff1c07da1677.jpg',
+                            'asset/images/netural/53f3f3f1-e837-4439-b0e7-064d64195ad9.jpg',
+                            'asset/images/green/@ne_hwa.jpg',
+                            'asset/images/green/777.jpg',
+                            'asset/images/earth/6b99b8a8-a09e-4d56-89f3-e04cea400b72.jpg',
+                            'asset/images/earth/6fc4ef97-6aae-41ab-9977-3a3b1cf7d080.jpg',
+                            'asset/images/earth/39a37fd1-f9c3-4024-bd2c-c6be1d3b534b.jpg',
+                            'asset/images/gold/🩶.jpg',
+                            'asset/images/gold/1.jpg',
+                            'asset/images/gold/2.jpg',
+                            'asset/images/gold/2 (2).jpg',
+                            'asset/images/gold/16b7935f-6a34-4da9-8e93-2a19d939f60a.jpg',
+                            'asset/images/gold/36739ad7-af68-4916-911f-217d25300e57.jpg',
+                            'asset/images/gold/b092df27-4655-40da-a7c2-08d770d26730.jpg',
+                            'asset/images/gold/bab464bb-f35b-49f2-acb3-23bffbb8bc2c.jpg',
+                            'asset/images/earth/740218a4-18f5-4778-a464-58b030b732e3.jpg',
+                            'asset/images/earth/Art 🎨.jpg',
+                            'asset/images/earth/cb3f0c7e-f010-4d36-8bd4-9cf52bb0b9d0.jpg',
+                            'asset/images/green/download.jpg',
+                            'asset/images/green/jen brown _ antes de diciembre.jpg',
+                            'asset/images/netural/0319f9a8-aba6-42f5-9da2-13b4a7bf380f.jpg',
+                            'asset/images/netural/3649dcff-5bd5-4e4f-8b0a-f440ebb5d095.jpg',
+                            'asset/images/netural/b6b93a79-b4cd-46dc-90a2-5e03690281d4.jpg',
+                          ], // ส่งรูปทั้งหมดไป
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    height: 50,
+                    width: 89,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          'All',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CategoryScreen(
+                          title: 'Classic',
+                          images: [
+                            'asset/images/gold/🩶.jpg',
+                            'asset/images/gold/1.jpg',
+                            'asset/images/gold/2.jpg',
+                            'asset/images/gold/2 (2).jpg',
+                            'asset/images/gold/16b7935f-6a34-4da9-8e93-2a19d939f60a.jpg',
+                            'asset/images/gold/36739ad7-af68-4916-911f-217d25300e57.jpg',
+                            'asset/images/gold/b092df27-4655-40da-a7c2-08d770d26730.jpg',
+                            'asset/images/gold/bab464bb-f35b-49f2-acb3-23bffbb8bc2c.jpg',
+                          ], // ส่งรูปเฉพาะ Classic
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    height: 50,
+                    width: 89,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          'Classic',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CategoryScreen(title: 'Chill', images: [
+                          'asset/images/earth/6b99b8a8-a09e-4d56-89f3-e04cea400b72.jpg',
+                          'asset/images/earth/6fc4ef97-6aae-41ab-9977-3a3b1cf7d080.jpg',
+                          'asset/images/earth/39a37fd1-f9c3-4024-bd2c-c6be1d3b534b.jpg',
+                          'asset/images/earth/740218a4-18f5-4778-a464-58b030b732e3.jpg',
+                          'asset/images/earth/Art 🎨.jpg',
+                          'asset/images/earth/cb3f0c7e-f010-4d36-8bd4-9cf52bb0b9d0.jpg',
+                        ]
+                                // ส่งรูปเฉพาะ Chill
+                                ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    height: 50,
+                    width: 89,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          'Chill',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CategoryScreen(
+                          title: 'Relax',
+                          images: [
+                            'asset/images/green/@ne_hwa.jpg',
+                            'asset/images/green/777.jpg',
+                            'asset/images/green/download.jpg',
+                            'asset/images/green/jen brown _ antes de diciembre.jpg',
+                          ], // ส่งรูปเฉพาะ Relax
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    height: 50,
+                    width: 89,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          'Relax',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CategoryScreen(
+                          title: 'Rest',
+                          images: [
+                            'asset/images/netural/2d2fc4b0-8396-48dd-86d5-554bd48f0072.jpg',
+                            'asset/images/netural/8a1c0825-ba83-4e0d-a122-ff1c07da1677.jpg',
+                            'asset/images/netural/53f3f3f1-e837-4439-b0e7-064d64195ad9.jpg',
+                            'asset/images/netural/0319f9a8-aba6-42f5-9da2-13b4a7bf380f.jpg',
+                            'asset/images/netural/3649dcff-5bd5-4e4f-8b0a-f440ebb5d095.jpg',
+                            'asset/images/netural/b6b93a79-b4cd-46dc-90a2-5e03690281d4.jpg',
+                          ], // ส่งรูปเฉพาะ Rest
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    height: 50,
+                    width: 89,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          'Rest',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'From Pinterest',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.blueGrey,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Reference All of Images',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
